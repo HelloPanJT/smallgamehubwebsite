@@ -34,8 +34,12 @@ class Intro extends Component {
                 <span style={headFont}>Buy and sell your cars</span>
               </Row>
               <Row>
-                <Button bsSize="large">Buy</Button>
-                <Button bsSize="large">Sell</Button>
+                <Link to={{ pathname: '/buy'}}>
+                  <Button bsSize="large">Buy</Button>
+                </Link>
+                <Link to={{ pathname: '/sell'}}>
+                  <Button bsSize="large">Sell</Button>
+                </Link>
               </Row>
             </Col>
             <Col md={2}></Col>
