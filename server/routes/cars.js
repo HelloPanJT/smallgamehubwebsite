@@ -10,7 +10,7 @@ movies.movieList.map(function(movie) {
 })
 
 /* GET example. */
-router.get('/example', function(req, res, next) {
+router.get('/intro', function(req, res, next) {
   var foo = {
     message: 'hello from express!'
   }

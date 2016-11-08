@@ -7,7 +7,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
-var api = require('./routes/api');
+var cars = require('./routes/cars');
 
 var app = express();
 
@@ -24,7 +24,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use('/', routes);
-app.use('/api', api);
+app.use('/', cars);
 
 var reactBase = path.resolve(__dirname, '../client/build')
 if (!fs.existsSync(reactBase)) {
