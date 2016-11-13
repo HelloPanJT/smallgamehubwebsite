@@ -5,9 +5,11 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+const passport = require('passport');
 
 var routes = require('./routes/index');
 var cars = require('./routes/cars');
+const localLoginStrategy = require('./passport/login');
 
 var app = express();
 
@@ -24,7 +26,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use('/', routes);
-app.use('/', cars);
+app.use(passport.initialize());
+passport.use('login', localLoginStrategy);
+app.use('/api', cars);
 
 var reactBase = path.resolve(__dirname, '../client/build')
 if (!fs.existsSync(reactBase)) {
