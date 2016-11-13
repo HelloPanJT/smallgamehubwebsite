@@ -34,7 +34,7 @@ class LoginModule extends React.Component {
         console.log('res:', res.body);
         if (res.body.success) {
           self.setState({ errors: '' });
-          Auth.authenticateUser(res.body.token);
+          Auth.authenticateUser(res.body.token, res.body.user.name);
           self.context.router.replace('/main');
         }
         else {

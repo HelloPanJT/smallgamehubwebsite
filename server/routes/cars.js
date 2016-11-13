@@ -1,6 +1,8 @@
 var express = require('express');
 var router = express.Router();
 const passport = require('passport');
+var request = require('request');
+var mongodb = require('mongodb');
 
 var userModel = require('../models/user');
 var MongoClient = require('mongodb').MongoClient;
@@ -8,6 +10,7 @@ var mongoURI = 'mongodb://ds057176.mlab.com:57176/today';
 var dbUser = "panjintian";
 var dbPassword = "panjintian";
 var userColl = "userdb";
+var courseColl = "courses";
 
 MongoClient.connect(mongoURI,function(err,db){
   if (err)
@@ -49,6 +52,37 @@ MongoClient.connect(mongoURI,function(err,db){
               }
             })(req, res);
           }
+        });
+
+        router.post('/addcourse', function(req,res){
+          var slug = req.body.data.url.split('/');
+          slug = slug[slug.length-1];
+
+          request('https://api.coursera.org/api/courses.v1?fields=photoUrl&q=slug&slug='+slug, (error, response, body)=> {
+            if (!error && response.statusCode === 200) {
+              const response = JSON.parse(body);
+              var data = response.elements[0];
+              data['username'] = req.body.username;
+              data['url'] = req.body.data.url;
+              data['description'] = req.body.data.description;
+              db.collection(courseColl).insert(data);
+            }
+          })
+        });
+
+        router.post('/display', function(req,res){
+          db.collection(courseColl).find({"username": req.body.username}).toArray(function(err, results) {
+            if (err) {
+              throw err;
+            }
+            else {
+              res.send(results);
+            }
+          });
+        });
+
+        router.post('/delete', function(req,res){
+          db.collection(courseColl).remove( { "_id" : new mongodb.ObjectID(req.body.id)});
         });
       }
     });

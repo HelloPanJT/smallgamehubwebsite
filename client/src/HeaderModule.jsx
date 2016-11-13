@@ -1,20 +1,13 @@
-import React, { Component } from 'react';
-import { Link } from 'react-router'
-import request from 'superagent';
-import IconMenu from 'material-ui/IconMenu';
-import IconButton from 'material-ui/IconButton';
-import FontIcon from 'material-ui/FontIcon';
-import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
-import MenuItem from 'material-ui/MenuItem';
-import DropDownMenu from 'material-ui/DropDownMenu';
+import React from 'react';
+
+
 import RaisedButton from 'material-ui/RaisedButton';
 import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
 
-class HeaderModule extends React.Component {
-  constructor() {
-    super();
-  }
+import Search from './Search'
 
+
+class HeaderModule extends React.Component {
   render () {
     return (
       <div>
@@ -22,9 +15,12 @@ class HeaderModule extends React.Component {
           <ToolbarGroup firstChild={true} float="left">
             <ToolbarTitle text="Courses" />
             <ToolbarSeparator />
+            <Search />
           </ToolbarGroup>
           <ToolbarGroup lastChild={true} float="right">
-            <RaisedButton label="Create Broadcast" primary={true} />
+
+            User: {this.props.username}
+            <RaisedButton label="Log Out" primary={true} />
           </ToolbarGroup>
         </Toolbar>
       </div>
