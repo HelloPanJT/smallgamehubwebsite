@@ -68,6 +68,7 @@ MongoClient.connect(mongoURI,function(err,db){
               db.collection(courseColl).insert(data);
             }
           })
+          res.send('success');
         });
 
         router.post('/display', function(req,res){
@@ -81,8 +82,17 @@ MongoClient.connect(mongoURI,function(err,db){
           });
         });
 
+        router.post('/editcourse', function(req,res){
+          console.log(req.body);
+          db.collection(courseColl).update(
+            { "_id" : new mongodb.ObjectID(req.body.id) },
+            { $set : { description : req.body.description }}
+          );
+          res.send('success');
+        });
+
         router.post('/delete', function(req,res){
-          db.collection(courseColl).remove( { "_id" : new mongodb.ObjectID(req.body.id)});
+          db.collection(courseColl).remove({ "_id" : new mongodb.ObjectID(req.body.id) });
         });
       }
     });

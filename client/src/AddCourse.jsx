@@ -46,6 +46,7 @@ class AddCourse extends React.Component {
   };
 
   addCourse = (event) => {
+    var self = this;
     request
      .post('/api/addcourse')
      .send({
@@ -57,7 +58,9 @@ class AddCourse extends React.Component {
        if (err || !res.ok) {
          console.log('Oh no! error', err);
        } else {
-        console.log('res:', res);
+        setTimeout(() => {
+          self.props.needUpdate();
+        }, 300);
       }
     });
     this.modalClose();

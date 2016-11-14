@@ -18,7 +18,6 @@ class HeaderModule extends React.Component {
             <Search />
           </ToolbarGroup>
           <ToolbarGroup lastChild={true} float="right">
-
             User: {this.props.username}
             <RaisedButton label="Log Out" primary={true} />
           </ToolbarGroup>
