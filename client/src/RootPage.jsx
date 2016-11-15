@@ -9,7 +9,7 @@ class RootPage extends React.Component {
     return (
       <div>
         <HeaderModule username={username} />
-        <CoursesDisplay username={username} />
+        {this.props.children}
       </div>
     );
   }

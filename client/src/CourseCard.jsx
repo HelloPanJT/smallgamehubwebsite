@@ -1,9 +1,12 @@
 import React from 'react';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import Star from 'material-ui/svg-icons/toggle/star';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import request from 'superagent';
+import {yellow500} from 'material-ui/styles/colors';
 
 class CourseCard extends React.Component {
   constructor() {
@@ -14,6 +17,7 @@ class CourseCard extends React.Component {
         description: '',
       },
       modalOpen: false,
+      marked: false,
     };
   }
 
@@ -22,7 +26,9 @@ class CourseCard extends React.Component {
       content: {
         id: this.props.id,
         description: this.props.description,
+
       },
+      marked: this.props.marked,
     });
   }
 
@@ -51,8 +57,38 @@ class CourseCard extends React.Component {
     });
   };
 
+  bookmarkCourse = (event) => {
+    var datas = this.props.bookmark;
+    datas['username'] = this.props.username;
+    if (this.state.marked) {
+      request
+       .post('/api/deletebookmark')
+       .send(datas)
+       .set('Accept', 'application/json')
+       .end(function(err, res) {
+         if (err || !res.ok) {
+          console.log('Oh no! error', err);
+         } else {
+          console.log(res.body);
+        }
+      });
+    } else {
+      request
+       .post('/api/bookmark')
+       .send(datas)
+       .set('Accept', 'application/json')
+       .end(function(err, res) {
+         if (err || !res.ok) {
+          console.log('Oh no! error', err);
+         } else {
+          console.log(res.body);
+        }
+      });
+    }
+    this.setState({marked: !this.state.marked});
+  };
+
   editCourse = (event) => {
-    var self = this;
     request
      .post('/api/editcourse')
      .send(this.state.content)
@@ -81,13 +117,9 @@ class CourseCard extends React.Component {
         onTouchTap={this.editCourse}
       />,
     ];
-
     return (
       <div>
         <Card>
-          <CardHeader
-            title={this.props.username}
-            />
           <CardMedia
             overlay={<CardTitle title={this.props.courseName} />}
             >
@@ -113,6 +145,26 @@ class CourseCard extends React.Component {
                 onTouchTap={this.modalOpen}
                 primary={true}
               />
+            }
+            {this.props.bookmark &&
+              ( this.state.marked ?
+                <RaisedButton
+                  label="Bookmark"
+                  labelPosition="after"
+                  secondary={true}
+                  icon={<Star color={yellow500} />}
+                  style={{margin: 12}}
+                  onTouchTap={this.bookmarkCourse}
+                /> :
+                <RaisedButton
+                  label="Bookmark"
+                  labelPosition="after"
+                  primary={true}
+                  icon={<Star />}
+                  style={{margin: 12}}
+                  onTouchTap={this.bookmarkCourse}
+                />
+              )
             }
             <a href={this.props.url}>More Info</a>
           </CardActions>
