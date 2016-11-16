@@ -3,7 +3,6 @@ var router = express.Router();
 const passport = require('passport');
 var request = require('request');
 var mongodb = require('mongodb');
-
 var userModel = require('../models/user');
 var MongoClient = require('mongodb').MongoClient;
 var mongoURI = 'mongodb://ds057176.mlab.com:57176/today';
@@ -11,7 +10,9 @@ var dbUser = "panjintian";
 var dbPassword = "panjintian";
 var userColl = "userdb";
 var courseColl = "courses";
-
+var pswChecker = require('../models/checkSignUpPassword').checkValid;
+var pswCheckcode = require('../models/passwordCheckCode').pswCheckcode;
+var specialString = require('../models/passwordCheckCode').specialString;
 MongoClient.connect(mongoURI,function(err,db){
   if (err)
     console.log('connect error');
@@ -57,10 +58,9 @@ MongoClient.connect(mongoURI,function(err,db){
         router.post('/addcourse', function(req,res){
           var slug = req.body.data.url.split('/');
           slug = slug[slug.length-1];
-
           request('https://api.coursera.org/api/courses.v1?fields=photoUrl&q=slug&slug='+slug, (error, response, body)=> {
             if (!error && response.statusCode === 200) {
-              const response = JSON.parse(body);
+              response = JSON.parse(body);
               var data = response.elements[0];
               data['username'] = req.body.username;
               data['url'] = req.body.data.url;
@@ -101,8 +101,8 @@ MongoClient.connect(mongoURI,function(err,db){
 
 function validateLoginForm(signUpData) {
   const errors = {};
-  let isFormValid = true;
-  let message = '';
+  var isFormValid = true;
+  var message = '';
 
   if (!signUpData || typeof signUpData.name !== 'string' || signUpData.name.trim().length === 0) {
     isFormValid = false;
@@ -125,11 +125,25 @@ function validateSignupForm(signUpData) {
   var isFormValid = true;
   var message = '';
 
-  if (!signUpData || typeof signUpData.password !== 'string' || signUpData.password.trim().length < 8) {
+  if (!signUpData || typeof signUpData.password !== 'string') {
     isFormValid = false;
-    errors.password = 'Password must have at least 8 characters.';
+    errors.password = 'password should not be a null string';
   }
-
+  else{
+    var code = pswChecker(signUpData.password);
+    isFormValid = false;
+    if(code == pswCheckcode.SUCCESS){
+      isFormValid = true;
+    }else if(code == pswCheckcode.SHORT_ERR){
+      errors.password = 'password length should not less than 8';
+    }else if(code == pswCheckcode.NUMBER_ERR){
+      errors.password = 'password should contain one digit at least';
+    }else if(code == pswCheckcode.SPECIAL_ERR){
+      errors.password = 'password should contain one of the following special character at least: ' + specialString;
+    }else{
+      errors.password = 'password should contain one UpperCase Letter at least';
+    }
+  }
   if (!signUpData || typeof signUpData.name !== 'string' || signUpData.name.trim().length === 0) {
     isFormValid = false;
     errors.name = 'Please provide your username.';

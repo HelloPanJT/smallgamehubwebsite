@@ -31,7 +31,7 @@ class SignUpModule extends React.Component {
          console.log('Oh no! error', err);
        } else {
          self.setState({
-           errors: res.body.errors,
+           errors: res.body.errors
         });
       }
     });
