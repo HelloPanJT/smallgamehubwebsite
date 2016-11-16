@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 var userColl = "userdb";
-
+var usrNameRM = require('./recommendUsrName').recommendName;
 
 module.exports = {
   checkUserName: function(db, user, res) {
@@ -10,10 +10,19 @@ module.exports = {
       }
       else {
         if (results.length > 0) {
-          res.send({
-            success: false,
-            errors: { name: 'Please user another username' }
-          });
+          db.collection(userColl).find({username: {$regex: user.name}}).toArray(function(suberr, subresults){
+            if(suberr){
+              throw err;
+            }
+            else{
+              console.log("the subresults is:" + subresults.length);
+              var recName = usrNameRM(subresults, user.name);
+              res.send({
+                success: false,
+                errors: { name: 'username has been used ' + 'recommendName:' + '\n' +recName }
+              });
+            }
+          })
         }
         else {
           bcrypt.genSalt((saltError, salt) => {
