@@ -33,7 +33,6 @@ class CoursesDisplay extends React.Component {
           data[ele._id] = ele
         );
         self.setState({ data: data });
-        console.log('length:', self.state.data)
       }
     });
   }
@@ -69,6 +68,7 @@ class CoursesDisplay extends React.Component {
         description={data[key].description}
         delete={this.delete.bind(this, data[key]._id)}
         edit={true}
+        tags={data[key].tags}
         />
     );
 

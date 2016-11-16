@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 import request from 'superagent';
 
 import CourseCard from './CourseCard';
@@ -40,6 +40,7 @@ class CourseDiscover extends React.Component {
         bookmark={ele}
         username={this.state.username}
         marked={this.state.username in ele.username}
+        tags={Object.keys(ele.tags)}
       />
     );
     return (

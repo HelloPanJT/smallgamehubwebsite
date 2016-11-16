@@ -25,7 +25,7 @@ render((
   <MuiThemeProvider muiTheme={getMuiTheme()}>
     <Router history={browserHistory}>
       <Route path="/" component={Entry}/>
-      <Route path="/main" component = {RootPage} onEnter={canAccess}>
+      <Route path="/main" component={RootPage} onEnter={canAccess}>
         <IndexRoute component={CoursesDisplay}/>
         <Route path="/discover" component={CourseDiscover} />
       </Route>
