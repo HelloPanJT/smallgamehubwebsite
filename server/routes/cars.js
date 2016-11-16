@@ -134,7 +134,8 @@ MongoClient.connect(mongoURI,function(err,db){
 
         router.post('/bookmark', function(req,res){
           var datas = req.body;
-          datas['tags'] = Object.keys(datas.tags)
+          datas['tags'] = '';
+          datas['description'] = '';
           db.collection(courseColl).insert(req.body);
           res.send('success');
         });

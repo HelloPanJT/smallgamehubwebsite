@@ -15,7 +15,6 @@ class HeaderModule extends React.Component {
           <ToolbarGroup firstChild={true} float="left">
             <ToolbarTitle text="Courses" />
             <ToolbarSeparator />
-            <Search />
           </ToolbarGroup>
           <ToolbarGroup lastChild={true} float="right">
             User: {this.props.username}

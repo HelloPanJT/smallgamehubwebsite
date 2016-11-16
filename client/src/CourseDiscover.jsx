@@ -3,6 +3,7 @@ import request from 'superagent';
 
 import CourseCard from './CourseCard';
 import Auth from './Auth'
+import Search from './Search'
 
 class CourseDiscover extends React.Component {
   constructor() {
@@ -28,6 +29,8 @@ class CourseDiscover extends React.Component {
     });
   }
 
+  search
+
   render () {
     var cards = this.state.data.map((ele) =>
       <CourseCard
@@ -45,6 +48,7 @@ class CourseDiscover extends React.Component {
     );
     return (
       <div>
+        <Search searchAction= />
         {cards}
       </div>
     );
