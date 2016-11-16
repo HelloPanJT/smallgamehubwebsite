@@ -1,9 +1,25 @@
 import React from 'react';
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import {Card, CardActions, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+import Star from 'material-ui/svg-icons/toggle/star';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
 import request from 'superagent';
+import {yellow500} from 'material-ui/styles/colors';
+import Chip from 'material-ui/Chip';
+import ChipInput from 'material-ui-chip-input';
+
+
+const styles = {
+  chip: {
+    margin: 4,
+  },
+  wrapper: {
+    display: 'flex',
+    flexWrap: 'wrap',
+  },
+};
 
 class CourseCard extends React.Component {
   constructor() {
@@ -14,16 +30,35 @@ class CourseCard extends React.Component {
         description: '',
       },
       modalOpen: false,
+      marked: false,
+      tags: {},
+      dataSource: [],
     };
   }
 
   componentDidMount() {
+    var otags = {};
+    var self = this;
+    this.props.tags.forEach((ele) => otags[ele] = 1);
     this.setState({
       content: {
         id: this.props.id,
         description: this.props.description,
       },
+      marked: this.props.marked,
+      tags: otags,
     });
+    request
+      .post('/api/getalltags')
+      .send({})
+      .set('Accept', 'application/json')
+      .end(function(err, res) {
+        if (err || !res.ok) {
+         console.log('Oh no! error', err);
+        } else {
+          self.setState({dataSource: res.body});
+        }
+      });
   }
 
   modalOpen = () => {
@@ -51,11 +86,56 @@ class CourseCard extends React.Component {
     });
   };
 
+  bookmarkCourse = (event) => {
+    var datas = this.props.bookmark;
+    datas['username'] = this.props.username;
+    if (this.state.marked) {
+      request
+       .post('/api/deletebookmark')
+       .send(datas)
+       .set('Accept', 'application/json')
+       .end(function(err, res) {
+         if (err || !res.ok) {
+          console.log('Oh no! error', err);
+         } else {
+          console.log(res.body);
+        }
+      });
+    } else {
+      request
+       .post('/api/bookmark')
+       .send(datas)
+       .set('Accept', 'application/json')
+       .end(function(err, res) {
+         if (err || !res.ok) {
+          console.log('Oh no! error', err);
+         } else {
+          console.log(res.body);
+        }
+      });
+    }
+    this.setState({marked: !this.state.marked});
+  };
+
+  addTag = (chip) => {
+    var chips = this.state.tags;
+    chips[chip] = 1;
+    this.setState({ tags: chips });
+  };
+
+  deleteTag = (chip) => {
+    var chips = this.state.tags;
+    delete chips[chip];
+    this.setState({ tags: chips });
+  };
+
   editCourse = (event) => {
-    var self = this;
     request
      .post('/api/editcourse')
-     .send(this.state.content)
+     .send({
+       content: this.state.content,
+       tags: Object.keys(this.state.tags),
+     })
      .set('Accept', 'application/json')
      .end(function(err, res) {
        if (err || !res.ok) {
@@ -81,13 +161,18 @@ class CourseCard extends React.Component {
         onTouchTap={this.editCourse}
       />,
     ];
+    const tagsForTap = Object.keys(this.state.tags).map((ele) =>
+      <Chip
+        key={ele}
+        style={styles.chip}
+      >
+        {ele}
+      </Chip>
+    );
 
     return (
       <div>
         <Card>
-          <CardHeader
-            title={this.props.username}
-            />
           <CardMedia
             overlay={<CardTitle title={this.props.courseName} />}
             >
@@ -96,6 +181,9 @@ class CourseCard extends React.Component {
           <CardTitle title="User description:" />
           <CardText>
             {this.state.content.description}
+            <div style={styles.wrapper}>
+            {tagsForTap}
+            </div>
           </CardText>
           <CardActions>
             {
@@ -114,6 +202,25 @@ class CourseCard extends React.Component {
                 primary={true}
               />
             }
+            {this.props.bookmark && (
+              this.state.marked ?
+                <RaisedButton
+                  label="Bookmark"
+                  labelPosition="after"
+                  secondary={true}
+                  icon={<Star color={yellow500} />}
+                  style={{margin: 12}}
+                  onTouchTap={this.bookmarkCourse}
+                /> :
+                <RaisedButton
+                  label="Bookmark"
+                  labelPosition="after"
+                  primary={true}
+                  icon={<Star />}
+                  style={{margin: 12}}
+                  onTouchTap={this.bookmarkCourse}
+                />
+            )}
             <a href={this.props.url}>More Info</a>
           </CardActions>
         </Card>
@@ -131,6 +238,14 @@ class CourseCard extends React.Component {
               onChange={this.changeText}
               value={this.state.content.description}
               />
+          </div>
+          <div className="field-line">
+            <ChipInput
+              value={Object.keys(this.state.tags)}
+              onRequestAdd={(chip) => this.addTag(chip)}
+              dataSource={this.state.dataSource}
+              onRequestDelete={(chip) => this.deleteTag(chip)}
+            />
           </div>
         </Dialog>
       </div>

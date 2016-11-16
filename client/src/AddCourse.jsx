@@ -1,9 +1,10 @@
 import React from 'react'
 import request from 'superagent';
+
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
-
+import ChipInput from 'material-ui-chip-input';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
@@ -25,7 +26,24 @@ class AddCourse extends React.Component {
         description: '',
       },
       modalOpen: false,
+      tags: {},
+      dataSource: [],
     };
+  }
+
+  componentDidMount() {
+    var self = this;
+    request
+      .post('/api/getalltags')
+      .send({})
+      .set('Accept', 'application/json')
+      .end(function(err, res) {
+        if (err || !res.ok) {
+         console.log('Oh no! error', err);
+        } else {
+          self.setState({dataSource: res.body});
+        }
+      });
   }
 
   modalOpen = () => {
@@ -45,6 +63,18 @@ class AddCourse extends React.Component {
     });
   };
 
+  addTag = (chip) => {
+    var chips = this.state.tags;
+    chips[chip] = 1;
+    this.setState({ tags: chips });
+  };
+
+  deleteTag = (chip) => {
+    var chips = this.state.tags;
+    delete chips[chip];
+    this.setState({ tags: chips });
+  };
+
   addCourse = (event) => {
     var self = this;
     request
@@ -52,6 +82,7 @@ class AddCourse extends React.Component {
      .send({
        data: this.state.content,
        username: this.props.username,
+       tags: Object.keys(this.state.tags),
      })
      .set('Accept', 'application/json')
      .end(function(err, res) {
@@ -80,7 +111,6 @@ class AddCourse extends React.Component {
         onTouchTap={this.addCourse}
       />,
     ];
-
     return (
       <div>
         <FloatingActionButton
@@ -103,6 +133,14 @@ class AddCourse extends React.Component {
               onChange={this.changeText}
               value={this.state.content.url}
               />
+          </div>
+          <div className="field-line">
+            <ChipInput
+              value={Object.keys(this.state.tags)}
+              onRequestAdd={(chip) => this.addTag(chip)}
+              dataSource={this.state.dataSource}
+              onRequestDelete={(chip) => this.deleteTag(chip)}
+            />
           </div>
           <div className="field-line">
             <TextField

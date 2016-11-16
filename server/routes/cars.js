@@ -65,6 +65,7 @@ MongoClient.connect(mongoURI,function(err,db){
               data['username'] = req.body.username;
               data['url'] = req.body.data.url;
               data['description'] = req.body.data.description;
+              data['tags'] = req.body.tags;
               db.collection(courseColl).insert(data);
             }
           })
@@ -82,13 +83,71 @@ MongoClient.connect(mongoURI,function(err,db){
           });
         });
 
+        router.post('/getallcourses', function(req,res){
+          db.collection(courseColl).aggregate(
+          	{ $group:
+          		{
+                _id: '$name',
+                total_saved: { $sum: 1 },
+                users: { $addToSet: "$username" },
+                tags: { $addToSet: "$tags" },
+                description: { $addToSet: "$description" },
+              }
+          	},
+          	function (err, groups) {
+          		if (err) return handleError(err);
+              var datas = [];
+              var itemsProcessed = 0;
+
+              groups.forEach((item, index, array) => {
+                db.collection(courseColl).findOne({"name": item._id}, function(err, ele) {
+                  var data = ele;
+                  var tagsArr = [];
+                  delete data['_id'];
+                  data['username'] = {};
+                  data['tags'] = {};
+                  item.users.forEach((ele) => data['username'][ele] = 1);
+                  item.tags.forEach((ele) => tagsArr.push(...ele));
+                  tagsArr.forEach((ele) => data['tags'][ele] = 1);
+                  data['description'] = item.description;
+                  datas.push(data);
+                  itemsProcessed++;
+                  if(itemsProcessed === array.length) {
+                    res.send(datas);
+                  }
+                });
+              });
+          	}
+          );
+        });
+
         router.post('/editcourse', function(req,res){
-          console.log(req.body);
           db.collection(courseColl).update(
-            { "_id" : new mongodb.ObjectID(req.body.id) },
-            { $set : { description : req.body.description }}
+            { "_id" : new mongodb.ObjectID(req.body.content.id) },
+            { $set : {
+              description : req.body.content.description,
+              tags: req.body.tags,
+            }}
           );
           res.send('success');
+        });
+
+        router.post('/bookmark', function(req,res){
+          var datas = req.body;
+          datas['tags'] = Object.keys(datas.tags)
+          db.collection(courseColl).insert(req.body);
+          res.send('success');
+        });
+
+        router.post('/deletebookmark', function(req,res){
+          db.collection(courseColl).remove({ "username": req.body.username, "id": req.body.id });
+          res.send('success');
+        });
+
+        router.post('/getalltags', function(req,res){
+          db.collection(courseColl).distinct("tags",(function(err, docs){
+            res.send(docs);
+          }))
         });
 
         router.post('/delete', function(req,res){
