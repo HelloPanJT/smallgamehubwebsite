@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react'
 import request from 'superagent';
+import {Grid, Cell} from 'react-mdl';
 import Auth from './Auth';
 
 import LoginFormModule from './LoginFormModule'
@@ -57,12 +58,18 @@ class LoginModule extends React.Component {
 
   render() {
     return (
-      <LoginFormModule
-        onSubmit={this.userLogin}
-        onChange={this.changeText}
-        errors={this.state.errors}
-        user={this.state.user}
-      />
+      <Grid>
+        <Cell col={3}></Cell>
+        <Cell col={6}>
+          <LoginFormModule
+            onSubmit={this.userLogin}
+            onChange={this.changeText}
+            errors={this.state.errors}
+            user={this.state.user}
+            />
+        </Cell>
+        <Cell col={3}></Cell>
+      </Grid>
     );
   }
 }

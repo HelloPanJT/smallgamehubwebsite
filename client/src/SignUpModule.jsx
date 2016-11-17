@@ -1,5 +1,6 @@
 import React from 'react'
 import request from 'superagent';
+import {Grid, Cell} from 'react-mdl';
 
 import SignUpForm from './SignUpFormModule'
 
@@ -48,12 +49,18 @@ class SignUpModule extends React.Component {
 
   render() {
     return (
-      <SignUpForm
-        onSubmit={this.userSignUp}
-        onChange={this.changeText}
-        errors={this.state.errors}
-        user={this.state.user}
-      />
+      <Grid>
+        <Cell col={3}></Cell>
+        <Cell col={6}>
+          <SignUpForm
+            onSubmit={this.userSignUp}
+            onChange={this.changeText}
+            errors={this.state.errors}
+            user={this.state.user}
+            />
+        </Cell>
+        <Cell col={3}></Cell>
+      </Grid>
     );
   }
 }
