@@ -15,7 +15,6 @@ module.exports = {
               throw err;
             }
             else{
-              console.log("the subresults is:" + subresults.length);
               var recName = usrNameRM(subresults, user.name);
               res.send({
                 success: false,
