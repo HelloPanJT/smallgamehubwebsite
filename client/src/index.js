@@ -12,6 +12,8 @@ import RootPage from './RootPage';
 import CoursesDisplay from './CoursesDisplay';
 import CourseDiscover from './CourseDiscover';
 import Auth from './Auth';
+import 'react-mdl/extra/material.css';
+import 'react-mdl/extra/material.js';
 
 injectTapEventPlugin();
 

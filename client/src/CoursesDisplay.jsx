@@ -3,7 +3,8 @@ import request from 'superagent';
 
 import CourseCard from './CourseCard';
 import AddCourse from './AddCourse';
-import Auth from './Auth'
+import Auth from './Auth';
+import {Grid} from 'react-mdl';
 
 class CoursesDisplay extends React.Component {
   constructor() {
@@ -65,6 +66,7 @@ class CoursesDisplay extends React.Component {
         courseName={data[key].name}
         photoUrl={data[key].photoUrl}
         url={data[key].url}
+        needExpand={false}
         description={data[key].description}
         delete={this.delete.bind(this, data[key]._id)}
         edit={true}
@@ -74,7 +76,9 @@ class CoursesDisplay extends React.Component {
 
     return (
       <div>
-        {cards}
+        <Grid>
+          {cards}
+        </Grid>
         <AddCourse
           username={this.state.username}
           needUpdate={this.needUpdate.bind(this)}

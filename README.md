@@ -1,19 +1,36 @@
 # Module 3 group project #
-__Submitted by:__ _team_name_
+__Submitted by:__ _Today_
 
 __Team members:__
+````
+Nanxiang Zhang  : zhan4584@umn.edu
+Jintian Pan     : panxx389@umn.edu
+Gloria Zhang    : zhan2209@umn.edu
+Zheng Sun       : sunxx738@umn.edu
+````
 
-- username@umn.edu
-- username@umn.edu
-- ...
-
-__Heroku URL:__ _url_
+__Heroku URL:__ _https://serene-garden-98230.herokuapp.com_
 
 __Argument of ambition (optional, maximum 100 words):__
 _Briefly argue why this was a technically ambitious project_
 
+* 1. Sign Up <b>check username</b>:
+	once user give a username (for example:previous), we will check database, and get all the username with the same starters, if exits, it will build a dirctionary tree and return the other 3 recommend username as "previous1" "previous2" "previous3" and the maximum time cost is 3n, n is the length of current duplicate username.
+* 2. <b>Password requirement</b>: longer than 8 and with at least 1 UPPER letter, 1 lower letter, 1 digit and 1 special mark !@#$%.
+* 3. Auto refresh, the website will refresh automitlly after user actions.  
+
+
+
 __Argument of execution (optional, maximum 100 words):__
 _Briefly argue why this was a well executed project_
+
+* 1. User login use theri account username/password. Or apply a new account. login to check personal board.
+* 2. User can <b>Add</b> course in user board use <i>coursera URL</i> and in discover board click bookmark(from blue to pink) to add to personal board.
+* 3. The <i>coursera URL</i> can not end with "/" and can not be the course in coursera special list.
+* 4. User can <b>Delete</b> course in user board use delete button and in discover boardcancel bookmark(from pinkto blue) to delete course from personal board.
+* 5. User can <b>Edit</b> course in user board for both description and Tag
+* 6. User can <b>Search</b> both by Tag and Titile keywords.
+* 7. For each course under discover board, user can  bookmark and cancel bookmark
 
 ## Description ##
 The group project for module 3 is to create a website for collecting and organizing content.

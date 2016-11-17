@@ -66,10 +66,23 @@ MongoClient.connect(mongoURI,function(err,db){
               data['url'] = req.body.data.url;
               data['description'] = req.body.data.description;
               data['tags'] = req.body.tags;
-              db.collection(courseColl).insert(data);
+              db.collection(courseColl).find({"username": req.body.username, "name": data['name']}).toArray(function(err, results) {
+                if (err) {
+                  throw err;
+                }
+                else {
+                  console.log(results)
+                  if(results.length > 0) {
+                    res.send({status: 'fail'});
+                  }
+                  else {
+                    db.collection(courseColl).insert(data);
+                    res.send({status: 'success'});
+                  }
+                }
+              });
             }
           })
-          res.send('success');
         });
 
         router.post('/display', function(req,res){
@@ -84,21 +97,27 @@ MongoClient.connect(mongoURI,function(err,db){
         });
 
         router.post('/getallcourses', function(req,res){
-          db.collection(courseColl).aggregate(
-          	{ $group:
-          		{
+          var filter = [
+            { $group:
+              {
                 _id: '$name',
                 total_saved: { $sum: 1 },
                 users: { $addToSet: "$username" },
                 tags: { $addToSet: "$tags" },
                 description: { $addToSet: "$description" },
               }
-          	},
+            }
+          ];
+          if (req.body.keywords) {
+            filter.unshift({$match:
+                            {"name": new RegExp('\.*'+req.body.keywords+'\.', 'i') } })
+          }
+          db.collection(courseColl).aggregate(
+            filter,
           	function (err, groups) {
           		if (err) return handleError(err);
               var datas = [];
               var itemsProcessed = 0;
-
               groups.forEach((item, index, array) => {
                 db.collection(courseColl).findOne({"name": item._id}, function(err, ele) {
                   var data = ele;
@@ -109,8 +128,10 @@ MongoClient.connect(mongoURI,function(err,db){
                   item.users.forEach((ele) => data['username'][ele] = 1);
                   item.tags.forEach((ele) => tagsArr.push(...ele));
                   tagsArr.forEach((ele) => data['tags'][ele] = 1);
-                  data['description'] = item.description;
-                  datas.push(data);
+                  if (!req.body.tags || haveAllFilters(req.body.tags, data['tags'])) {
+                    data['description'] = item.description;
+                    datas.push(data);
+                  }
                   itemsProcessed++;
                   if(itemsProcessed === array.length) {
                     res.send(datas);
@@ -134,7 +155,8 @@ MongoClient.connect(mongoURI,function(err,db){
 
         router.post('/bookmark', function(req,res){
           var datas = req.body;
-          datas['tags'] = Object.keys(datas.tags)
+          datas['tags'] = [];
+          datas['description'] = '';
           db.collection(courseColl).insert(req.body);
           res.send('success');
         });
@@ -157,6 +179,14 @@ MongoClient.connect(mongoURI,function(err,db){
     });
   }
 })
+
+function haveAllFilters(tags, allTags) {
+  var flag = true;
+  tags.forEach((ele) => {
+    if (!(ele in allTags)) {flag = false;}
+  });
+  return flag
+}
 
 function validateLoginForm(signUpData) {
   const errors = {};
