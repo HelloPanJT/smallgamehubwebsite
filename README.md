@@ -1,13 +1,15 @@
 # Module 3 group project #
-__Submitted by:__ _team_name_
+__Submitted by:__ _Today_
 
 __Team members:__
+````
+Nanxiang Zhang  : zhan4584@umn.edu
+Jintian Pan     : panxx389@umn.edu
+Gloria Zhang    : zhan2209@umn.edu
+Zheng Sun       : sunxx738@umn.edu
+````
 
-- username@umn.edu
-- username@umn.edu
-- ...
-
-__Heroku URL:__ _url_
+__Heroku URL:__ _https://serene-garden-98230.herokuapp.com_
 
 __Argument of ambition (optional, maximum 100 words):__
 _Briefly argue why this was a technically ambitious project_
