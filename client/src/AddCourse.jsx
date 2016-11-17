@@ -28,6 +28,7 @@ class AddCourse extends React.Component {
       modalOpen: false,
       tags: {},
       dataSource: [],
+      error: '',
     };
   }
 
@@ -89,12 +90,18 @@ class AddCourse extends React.Component {
        if (err || !res.ok) {
          console.log('Oh no! error', err);
        } else {
-        setTimeout(() => {
-          self.props.needUpdate();
-        }, 300);
+        console.log(res.body)
+        if (res.body.status === 'fail') {
+          self.setState({error: 'The course has already been added!'});
+        } else {
+          self.setState({error: ''});
+          self.modalClose();
+          setTimeout(() => {
+            self.props.needUpdate();
+          }, 400);
+        }
       }
     });
-    this.modalClose();
   };
 
   render () {
@@ -132,6 +139,7 @@ class AddCourse extends React.Component {
               name="url"
               onChange={this.changeText}
               value={this.state.content.url}
+              errorText={this.state.error}
               />
           </div>
           <div className="field-line">

@@ -9,7 +9,9 @@ import request from 'superagent';
 import {yellow500} from 'material-ui/styles/colors';
 import Chip from 'material-ui/Chip';
 import ChipInput from 'material-ui-chip-input';
-
+import {Cell} from 'react-mdl';
+import Toggle from 'material-ui/Toggle';
+import {List, ListItem} from 'material-ui/List';
 
 const styles = {
   chip: {
@@ -27,12 +29,14 @@ class CourseCard extends React.Component {
     this.state = {
       content: {
         id: '',
-        description: '',
+        description: [],
       },
       modalOpen: false,
       marked: false,
       tags: {},
       dataSource: [],
+      expanded: false,
+      shareCount: 0,
     };
   }
 
@@ -47,6 +51,7 @@ class CourseCard extends React.Component {
       },
       marked: this.props.marked,
       tags: otags,
+      shareCount: this.props.sharedBy,
     });
     request
       .post('/api/getalltags')
@@ -89,6 +94,8 @@ class CourseCard extends React.Component {
   bookmarkCourse = (event) => {
     var datas = this.props.bookmark;
     datas['username'] = this.props.username;
+    var count = this.state.shareCount;
+    count = count + (this.state.marked ? -1 : 1);
     if (this.state.marked) {
       request
        .post('/api/deletebookmark')
@@ -114,7 +121,10 @@ class CourseCard extends React.Component {
         }
       });
     }
-    this.setState({marked: !this.state.marked});
+    this.setState({
+      marked: !this.state.marked,
+      shareCount: count,
+    });
   };
 
   addTag = (chip) => {
@@ -147,6 +157,10 @@ class CourseCard extends React.Component {
     this.modalClose();
   };
 
+  handleToggle = () => {
+    this.setState({expanded: !this.state.expanded})
+  };
+
   render () {
     const actions = [
       <FlatButton
@@ -170,21 +184,55 @@ class CourseCard extends React.Component {
       </Chip>
     );
 
+    var descriptions = [];
+
+    if (this.props.needExpand) {
+      var descState = this.state.content.description;
+      descState.forEach((ele) => {if (ele !== "") {descriptions.push(ele)}});
+      descriptions = descriptions.map(ele => {
+        if (ele !== "") {return <ListItem key={ele} primaryText={ele} />}
+      });
+    }
+
     return (
-      <div>
-        <Card>
+      <Cell col={4}>
+        <Card expanded={this.state.expanded}>
           <CardMedia
             overlay={<CardTitle title={this.props.courseName} />}
             >
-            <img src={this.props.photoUrl} alt="mooc" />
+            <img style={{height: 300}} src={this.props.photoUrl} alt="mooc" />
           </CardMedia>
-          <CardTitle title="User description:" />
+          { this.props.needExpand && descriptions.length > 1 &&
+            <CardText>
+              <Toggle
+                toggled={this.state.expanded}
+                onToggle={this.handleToggle}
+                labelPosition="right"
+                label="See user descriptions"
+              />
+            </CardText>
+          }
+          { this.props.needExpand && descriptions.length > 1 ?
+              <CardText expandable={true}>
+                <List>
+                  {descriptions}
+                </List>
+              </CardText> :
+              <CardText>
+                {this.state.content.description}
+              </CardText>
+          }
           <CardText>
-            {this.state.content.description}
             <div style={styles.wrapper}>
-            {tagsForTap}
+              {tagsForTap}
             </div>
           </CardText>
+          {
+            this.props.sharedBy &&
+            <CardText>
+              Shared By {this.state.shareCount} Users
+            </CardText>
+          }
           <CardActions>
             {
               this.props.delete &&
@@ -248,7 +296,7 @@ class CourseCard extends React.Component {
             />
           </div>
         </Dialog>
-      </div>
+      </Cell>
     );
   }
 }
