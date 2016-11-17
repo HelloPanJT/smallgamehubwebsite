@@ -15,11 +15,11 @@ __Argument of ambition (optional, maximum 100 words):__
 _Briefly argue why this was a technically ambitious project_
 * 1. Sign Up <b>check username</b>, if exits,return the other 3 recommend username(maximum time cost is 3n )
 * 2. <b>Password requirement</b>: longer than 8 and with at least 1 UPPER 1 lower 1digit and 1 special mark.  
-* 3. User can <b>Add</b> course in user board use <i>coursera URL</i> and in discover board click bookmark(from blue to pink).
-* 4. User can <b>Delete</b> course in user board use delete button and in discover boardcancel bookmark(from pinkto blue).
+* 3. User can <b>Add</b> course in user board use <i>coursera URL</i> and in discover board click bookmark(from blue to pink) to add to personal board.
+* 4. User can <b>Delete</b> course in user board use delete button and in discover boardcancel bookmark(from pinkto blue) to delete course from personal board.
 * 5. User can <b>Edit</b> course in user board for both description and Tag
 * 6. User can <b>Search</b> both by Tag and Titile keywords.
-* 7. For each course under discover board, user can <b>bookmark</b> and <b>cancel bookmark</b>
+* 7. For each course under discover board, user can  bookmark and cancel bookmark
 
 __Argument of execution (optional, maximum 100 words):__
 _Briefly argue why this was a well executed project_
