@@ -18,7 +18,8 @@ module.exports = {
               var recName = usrNameRM(subresults, user.name);
               res.send({
                 success: false,
-                errors: { name: 'username has been used ' + 'recommendName:' + '\n' +recName }
+                message: { name: 'username has been used ' + 'recommendName:' + '\n' +recName, 
+                           password: ''}
               });
             }
           })
@@ -33,7 +34,8 @@ module.exports = {
           });
           res.send({
             success: true,
-            errors: {}
+            message: {name: 'SignUp Successfully',
+                      password: ''}
           });
         }
       }

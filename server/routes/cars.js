@@ -39,9 +39,12 @@ MongoClient.connect(mongoURI,function(err,db){
           else {
             passport.authenticate('login', (err, token, userData) => {
               if (err) {
+                const errors = {};
+                errors.name = 'Incorrect username or password';
+                errors.password = 'Incorrect username or password';
                 res.send({
                   success: false,
-                  message: 'Incorrect username or password'
+                  message: errors
                 });
               } else {
                 res.send({
@@ -126,7 +129,7 @@ MongoClient.connect(mongoURI,function(err,db){
                   data['username'] = {};
                   data['tags'] = {};
                   item.users.forEach((ele) => data['username'][ele] = 1);
-                  item.tags.forEach((ele) => tagsArr.push(...ele));
+                  item.tags.forEach((ele) => tagsArr.push(ele));
                   tagsArr.forEach((ele) => data['tags'][ele] = 1);
                   if (!req.body.tags || haveAllFilters(req.body.tags, data['tags'])) {
                     data['description'] = item.description;
@@ -191,7 +194,6 @@ function haveAllFilters(tags, allTags) {
 function validateLoginForm(signUpData) {
   const errors = {};
   var isFormValid = true;
-  var message = '';
 
   if (!signUpData || typeof signUpData.name !== 'string' || signUpData.name.trim().length === 0) {
     isFormValid = false;
@@ -205,14 +207,13 @@ function validateLoginForm(signUpData) {
 
   return {
     success: isFormValid,
-    errors
+    message: errors
   };
 }
 
 function validateSignupForm(signUpData) {
   const errors = {};
   var isFormValid = true;
-  var message = '';
 
   if (!signUpData || typeof signUpData.password !== 'string') {
     isFormValid = false;
@@ -240,7 +241,7 @@ function validateSignupForm(signUpData) {
 
   return {
     success: isFormValid,
-    errors
+    message: errors
   };
 }
 
