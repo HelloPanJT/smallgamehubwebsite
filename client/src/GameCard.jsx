@@ -1,17 +1,8 @@
 import React from 'react';
 import {Card, CardActions, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
-import Star from 'material-ui/svg-icons/toggle/star';
-import Dialog from 'material-ui/Dialog';
-import TextField from 'material-ui/TextField';
 import request from 'superagent';
-import {yellow500} from 'material-ui/styles/colors';
-import Chip from 'material-ui/Chip';
-import ChipInput from 'material-ui-chip-input';
 import {Cell} from 'react-mdl';
-import Toggle from 'material-ui/Toggle';
-import {List, ListItem} from 'material-ui/List';
 import Chips from './Chips';
 import EditGame from './EditGame';
 
@@ -56,7 +47,6 @@ class GameCard extends React.Component {
   }
 
   render () {
-    var chips = [];
     return (
       <Cell col={3}>
         <Card>
@@ -80,7 +70,7 @@ class GameCard extends React.Component {
               primary={true}
             />}
             {this.props.isDiscover && <FlatButton
-              label= "like"
+              label="like"
               onTouchTap={this.like}
               primary={true}
             />}

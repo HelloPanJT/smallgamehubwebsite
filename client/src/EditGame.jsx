@@ -1,6 +1,5 @@
 import React from 'react'
 import request from 'superagent';
-
 import FlatButton from 'material-ui/FlatButton';
 import Dialog from 'material-ui/Dialog';
 import TextField from 'material-ui/TextField';
@@ -109,7 +108,7 @@ class EditGame extends React.Component {
     return (
       <div>
         <Dialog
-          title= {title}
+          title={title}
           actions={actions}
           modal={false}
           open={this.props.modalOpen}

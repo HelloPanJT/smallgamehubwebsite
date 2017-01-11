@@ -1,15 +1,8 @@
 import React from 'react';
 import TextField from 'material-ui/TextField';
-import RaisedButton from 'material-ui/RaisedButton';
-import Toggle from 'material-ui/Toggle';
-import ChipInput from 'material-ui-chip-input';
-import request from 'superagent';
 import {Grid, Cell} from 'react-mdl';
 
 class Search extends React.Component {
-  constructor() {
-    super();
-  }  
   render () {
     return (
       <Grid>

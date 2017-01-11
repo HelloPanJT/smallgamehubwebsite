@@ -5,7 +5,6 @@ import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 import request from 'superagent'
 import Auth from './Auth';
-import {Router} from 'react-router'
 class Form extends Component {
   constructor(props, context) {
     super(props, context);
@@ -21,7 +20,7 @@ class Form extends Component {
   
   onChange(event) {
     const field = event.target.name;
-    if (field == 'username') {
+    if (field === 'username') {
       this.setState({
         username: event.target.value
       })
