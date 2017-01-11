@@ -7,14 +7,14 @@ import ActionAndroid from 'material-ui/svg-icons/action/android';
 import Auth from './Auth'
 
 class HeaderModule extends React.Component {
-  toMain = (event) => {
+  toMyfavorite = (event) => {
     event.preventDefault();
-    this.context.router.replace('/main');
+    this.context.router.replace('/myfavorite');
   }
 
   toDiscover = (event) => {
     event.preventDefault();
-    this.context.router.replace('/discover');
+    this.context.router.replace('/main');
   }
 
   logOut = (event) => {
@@ -28,9 +28,9 @@ class HeaderModule extends React.Component {
       <div>
         <Toolbar>
           <ToolbarGroup firstChild={true} float="left">
-            <ToolbarTitle style={{marginLeft: 20}} text="Courses" />
+            <ToolbarTitle style={{marginLeft: 20}} text="Games" />
             <ToolbarSeparator />
-            <RaisedButton style={{marginLeft: 20}} label="Main" primary={true} onTouchTap={this.toMain} />
+            <RaisedButton style={{marginLeft: 20}} label="My game" primary={true} onTouchTap={this.toMyfavorite} />
             <RaisedButton style={{marginLeft: 20}} label="Discover" primary={true} onTouchTap={this.toDiscover} />
           </ToolbarGroup>
           <ToolbarGroup lastChild={true} float="right">

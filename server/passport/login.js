@@ -9,7 +9,7 @@ var dbPassword = "panjintian";
 var userColl = "userdb";
 
 module.exports = new PassportLocalStrategy({
-  usernameField: 'name',
+  usernameField: 'username',
   passwordField: 'password',
   session: false,
   passReqToCallback: true
@@ -26,7 +26,6 @@ module.exports = new PassportLocalStrategy({
             name: name.trim(),
             password: password.trim()
           };
-
           db.collection(userColl).find({"username": userData.name}).limit(1).toArray(function(err, results) {
             if (err) {
               throw err;

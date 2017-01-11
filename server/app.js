@@ -6,11 +6,10 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 const passport = require('passport');
-
 var routes = require('./routes/index');
 var cars = require('./routes/cars');
 const localLoginStrategy = require('./passport/login');
-
+var Loginer = require('./models/Loginer');
 var app = express();
 
 // view engine setup
@@ -29,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 passport.use('login', localLoginStrategy);
 app.use('/api', cars);
-
+app.use(Loginer);
 var reactBase = path.resolve(__dirname, '../client/build')
 if (!fs.existsSync(reactBase)) {
   throw 'TODO, need to `npm run build` in client dir'

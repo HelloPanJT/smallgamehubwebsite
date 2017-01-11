@@ -9,8 +9,8 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import Entry from './Entry'
 import RootPage from './RootPage';
-import CoursesDisplay from './CoursesDisplay';
-import CourseDiscover from './CourseDiscover';
+import GameDisplay from './GameDisplay';
+import GameDiscover from './GameDiscover';
 import Auth from './Auth';
 import 'react-mdl/extra/material.css';
 import 'react-mdl/extra/material.js';
@@ -28,8 +28,8 @@ render((
     <Router history={browserHistory}>
       <Route path="/" component={Entry}/>
       <Route path="/main" component={RootPage} onEnter={canAccess}>
-        <IndexRoute component={CoursesDisplay}/>
-        <Route path="/discover" component={CourseDiscover} />
+        <IndexRoute component={() => (<GameDiscover isDiscover={true}/>)} />
+        <Route path="/myfavorite" component={() => (<GameDisplay isMyDeveloped={true}/>)}/>
       </Route>
     </Router>
   </MuiThemeProvider>

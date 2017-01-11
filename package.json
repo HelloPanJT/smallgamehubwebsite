@@ -20,6 +20,7 @@
     "react-tap-event-plugin": "1.0.0",
     "request": "^2.78.0",
     "serve-favicon": "~2.3.0",
+    "valid-url": "^1.0.9",
     "validator": "^6.1.0"
   },
   "devDependencies": {

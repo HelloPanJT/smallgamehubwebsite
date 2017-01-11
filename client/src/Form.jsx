@@ -10,32 +10,25 @@ class Form extends Component {
   constructor(props, context) {
     super(props, context);
     this.state={
-      user: {
-        name: '',
-        password: ''
-      },
-      errors: ''
+      username: '',
+      password: '',
+      nameError: '',
+      passwordError: ''
     };
     this.onChange = this.onChange.bind(this);
     this.handleFBEvent = this.handleFBEvent.bind(this);
-  }
+  };
   
   onChange(event) {
     const field = event.target.name;
-    if (field == 'name') {
-        this.setState({
-          user: {
-            name: event.target.value,
-            password: this.state.user.password
-          }
-        })
+    if (field == 'username') {
+      this.setState({
+        username: event.target.value
+      })
     } else {
-        this.setState({
-          user: {
-            name: this.state.user.name,
-            password: event.target.value
-          }
-        })
+      this.setState({
+        password: event.target.value
+      })
     }
   }
 
@@ -49,9 +42,10 @@ class Form extends Component {
         url = '/api/signup';
     }
     self = this;
-        request
+    var userInfo = {username: this.state.username, password: this.state.password};
+    request
       .post(url)
-      .send(self.state.user)
+      .send(userInfo)
       .set('Accept', 'application/json')
       .end(function(err, res) {
         if (err || !res.ok) {
@@ -62,7 +56,8 @@ class Form extends Component {
               self.context.router.replace('/main');
             }
         } 
-        self.setState({errors:res.body.message});
+        self.setState({nameError: res.body.message.username,
+                       passwordError: res.body.message.password});
     })
   }
 
@@ -80,8 +75,8 @@ class Form extends Component {
                   <div className="field-line">
                     <TextField
                       floatingLabelText="Name"
-                      name="name"
-                      errorText={this.state.errors.name}
+                      name="username"
+                      errorText={this.state.nameError}
                       onChange={this.onChange}
                     />
                   </div>
@@ -90,7 +85,7 @@ class Form extends Component {
                       floatingLabelText="Password"
                       type="password"
                       name="password"
-                      errorText={this.state.errors.password}
+                      errorText={this.state.passwordError}
                       onChange={this.onChange}
                     />
                   </div>
