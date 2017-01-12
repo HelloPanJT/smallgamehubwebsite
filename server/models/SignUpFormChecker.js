@@ -6,7 +6,6 @@ var SignUpFormChecker = function(db) {
 }
 
 SignUpFormChecker.prototype.validateSignupForm = function(signUpData, res) {
-  console.log(signUpData.password);
   var status = checkPassWord(signUpData.password);
   if (!status.success) {
     res.send(status);
