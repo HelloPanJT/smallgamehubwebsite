@@ -6,19 +6,27 @@ var Loginer = function(dbManager) {
 }
 
 Loginer.prototype.login = function(data) {
-  var status = checkUserName(data.username);
+  var status = checkData(data);
   return status;
 }
 
 
-var checkUserName = function(userName) {
-  if (!userName || typeof userName !== 'string' || userName.trim().length === 0) {
+var checkData = function(data) {
+  if (!data.username || typeof data.username !== 'string' || data.username.trim().length === 0) {
     return {
       success: false,
-      message: "please provide your name"
+      message: {username: "please provide your name",
+                password: ''}
     }
   }
-
+  
+  if (!data.password || typeof data.password !== 'string' || data.password.trim().length === 0) {
+    return{
+      success: false,
+      message: {username: '',
+                password: "please enter your password"}
+    }
+  }
   return {
     success: true,
     message: "success in first step"
